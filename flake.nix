@@ -1,5 +1,5 @@
 {
-  description = "TODO: fill me in";
+  description = "Plugbench clipboard support";
   inputs = {
     flake-utils.url = "github:numtide/flake-utils";
   };
@@ -7,7 +7,10 @@
     (flake-utils.lib.eachDefaultSystem (system:
       let
         pkgs = nixpkgs.legacyPackages.${system};
-        clipboard-pluggo = pkgs.callPackage ./derivation.nix {};
+        clipboard-pluggo = pkgs.callPackage ./derivation.nix {
+          inherit (pkgs.darwin.apple_sdk.frameworks) Cocoa;
+          inherit (pkgs.xorg) libX11;
+        };
       in {
         packages = {
           default = clipboard-pluggo;

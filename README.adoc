@@ -1,4 +1,4 @@
 clipboard-pluggo
 ================
 
-TODO: fill me in
+Plugbench clipboard support.
