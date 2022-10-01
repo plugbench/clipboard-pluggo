@@ -20,14 +20,14 @@ func main() {
 	defer nc.Close()
 
 	getCh := make(chan *nats.Msg, 32)
-	getSub, err := nc.ChanSubscribe("clipboard.get", getCh)
+	getSub, err := nc.ChanSubscribe("cmd.get.clipboard", getCh)
 	if err != nil {
 		log.Fatal(err)
 	}
 	defer getSub.Drain()
 
 	setCh := make(chan *nats.Msg, 32)
-	setSub, err := nc.ChanSubscribe("clipboard.set", setCh)
+	setSub, err := nc.ChanSubscribe("cmd.put.clipboard", setCh)
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -51,7 +51,7 @@ func main() {
 				log.Printf("error sending set reply: %v", err)
 			}
 		case contents = <-changeCh:
-			event := nats.NewMsg("clipboard.changed")
+			event := nats.NewMsg("event.changed.clipboard")
 			event.Data = contents
 			if err := nc.PublishMsg(event); err != nil {
 				log.Printf("error sending changed event: %v", err)
