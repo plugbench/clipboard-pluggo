@@ -1,4 +1,4 @@
-module github.com/eraserhd/dotfiles/pkg/nats-plumber
+module github.com/plugbench/clipboard-pluggo
 
 go 1.18
 
