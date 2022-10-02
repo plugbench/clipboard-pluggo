@@ -17,7 +17,7 @@
           inherit clipboard-pluggo;
         };
         checks = {
-          test = pkgs.runCommandNoCC "clipboard-pluggo-test" {} ''
+          test = pkgs.runCommand "clipboard-pluggo-test" {} ''
             mkdir -p $out
             : ${clipboard-pluggo}
           '';
