@@ -24,7 +24,10 @@
         };
     })) // {
       overlays.default = final: prev: {
-        clipboard-pluggo = prev.callPackage ./derivation.nix {};
+        clipboard-pluggo = prev.callPackage ./derivation.nix {
+          inherit (final.darwin.apple_sdk.frameworks) Cocoa;
+          inherit (final.xorg) libX11;
+        };
       };
     };
 }
