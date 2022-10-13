@@ -47,6 +47,7 @@ func main() {
 		case msg := <-setCh:
 			clipboard.Write(clipboard.FmtText, msg.Data)
 			reply := nats.NewMsg(msg.Reply)
+			reply.Data = []byte("ok")
 			if err := nc.PublishMsg(reply); err != nil {
 				log.Printf("error sending set reply: %v", err)
 			}
