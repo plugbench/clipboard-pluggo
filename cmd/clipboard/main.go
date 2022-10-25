@@ -2,11 +2,18 @@ package main
 
 import (
 	"context"
+	"fmt"
 	"log"
 
 	"github.com/nats-io/nats.go"
 	"golang.design/x/clipboard"
 )
+
+func sendLog(nc *nats.Conn, level, text string, args ...interface{}) {
+	msg := nats.NewMsg("event.logged.clipboard-pluggo." + level)
+	msg.Data = []byte(fmt.Sprintf(text, args...))
+	nc.PublishMsg(msg)
+}
 
 func main() {
 	if err := clipboard.Init(); err != nil {
@@ -39,23 +46,26 @@ func main() {
 	for {
 		select {
 		case msg := <-getCh:
+			sendLog(nc, "info", "recieved get")
 			reply := nats.NewMsg(msg.Reply)
 			reply.Data = contents
 			if err := nc.PublishMsg(reply); err != nil {
-				log.Printf("error sending get reply: %v", err)
+				sendLog(nc, "error", "error sending get reply: %v", err)
 			}
 		case msg := <-setCh:
+			sendLog(nc, "info", "recieved set %q", string(msg.Data))
 			clipboard.Write(clipboard.FmtText, msg.Data)
 			reply := nats.NewMsg(msg.Reply)
 			reply.Data = []byte("ok")
 			if err := nc.PublishMsg(reply); err != nil {
-				log.Printf("error sending set reply: %v", err)
+				sendLog(nc, "error", "error sending set reply: %v", err)
 			}
 		case contents = <-changeCh:
+			sendLog(nc, "info", "clipboard changed to %q", string(contents))
 			event := nats.NewMsg("event.changed.clipboard")
 			event.Data = contents
 			if err := nc.PublishMsg(event); err != nil {
-				log.Printf("error sending changed event: %v", err)
+				sendLog(nc, "error", "error sending changed event: %v", err)
 			}
 		}
 	}
