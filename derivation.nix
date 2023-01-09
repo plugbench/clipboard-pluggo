@@ -14,7 +14,7 @@ buildGoModule {
 
   buildInputs = lib.optional stdenv.isDarwin Cocoa ++ lib.optional (!stdenv.isDarwin) libX11;
 
-  vendorSha256 = "GdG7QpcrQQ7+FZwswFiEsIHXeOvzgjpeKgX0/woTNLU=";
+  vendorSha256 = "OmtzQfirsDnR31vIy1nwrm0L3t83BvFyOJcCXsWroRw=";
 
   meta = with lib; {
     description = "Plugbench clipboard support";
