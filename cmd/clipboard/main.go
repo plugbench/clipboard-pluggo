@@ -4,6 +4,7 @@ import (
 	"context"
 	"fmt"
 	"log"
+	"os"
 
 	"github.com/nats-io/nats.go"
 	"golang.design/x/clipboard"
@@ -20,7 +21,12 @@ func main() {
 		log.Fatal(err)
 	}
 
-	nc, err := nats.Connect(nats.DefaultURL)
+	var natsOptions []nats.Option
+	if token := os.Getenv("NATS_TOKEN"); token != "" {
+		natsOptions = append(natsOptions, nats.Token(token))
+	}
+
+	nc, err := nats.Connect(nats.DefaultURL, natsOptions...)
 	if err != nil {
 		log.Fatal(err)
 	}

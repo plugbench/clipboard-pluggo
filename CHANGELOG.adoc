@@ -4,5 +4,6 @@ Changes
 Unreleased
 ----------
 
+* Accept $NATS_TOKEN in environment
 * Log to NATS
 
